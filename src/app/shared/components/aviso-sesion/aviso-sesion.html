@@ -1,0 +1,20 @@
+@if (auth.mostrarAviso()) {
+  <section class="aviso" aria-label="Aviso de vencimiento de sesión">
+    <div class="contenido">
+      <span class="icono" aria-hidden="true">⚠</span>
+      <div class="mensaje">
+        <strong>Su sesión está por vencer</strong>
+        <span>Tiempo restante: <b class="reloj">{{ tiempoRestante() }}</b></span>
+      </div>
+    </div>
+
+    <div class="acciones">
+      <button type="button" class="btn-cerrar" (click)="auth.cerrarSesion()">
+        Cerrar sesión ahora
+      </button>
+      <button type="button" class="btn-ocultar"
+              aria-label="Ocultar aviso hasta la siguiente sesión"
+              (click)="auth.ocultarAviso()">×</button>
+    </div>
+  </section>
+}

@@ -1,0 +1,68 @@
+<header class="header">
+
+  <button
+    type="button"
+    class="btn-menu"
+    aria-label="Mostrar u ocultar menú"
+    (click)="toggleMenu.emit()">
+
+    ☰
+
+  </button>
+
+  <a
+    routerLink="/inicio"
+    class="marca">
+
+    PharmaSoft
+
+  </a>
+
+  <nav class="menubar">
+
+    <a routerLink="/inicio">
+      Inicio
+    </a>
+
+    <a
+      href="http://localhost:8080/swagger-ui.html"
+      target="_blank"
+      rel="noopener">
+
+      API
+
+    </a>
+
+  </nav>
+
+  @if (auth.sesion(); as s) {
+
+    <div class="usuario">
+
+      <div class="fila-usuario">
+        <span class="nombre">{{ s.nombreCompleto }}</span>
+        <a routerLink="/mi-cuenta" class="enlace-cuenta">Mi cuenta</a>
+      </div>
+
+      <span class="detalle">
+
+        {{ s.roles.join(' · ') }}
+        · expira
+        {{ s.expiraEn | date:'HH:mm' }}
+
+      </span>
+
+    </div>
+
+    <button
+      type="button"
+      class="btn-salir"
+      (click)="salir()">
+
+      Cerrar sesión
+
+    </button>
+
+  }
+
+</header>

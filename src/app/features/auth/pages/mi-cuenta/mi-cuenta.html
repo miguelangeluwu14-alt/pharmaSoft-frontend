@@ -1,0 +1,62 @@
+<section class="cuenta" aria-labelledby="titulo-cuenta">
+  <div class="encabezado">
+    <div>
+      <p class="eyebrow">PHARMASOFT / PERFIL</p>
+      <h1 id="titulo-cuenta">Mi cuenta</h1>
+      <p class="subtitulo">Información actual registrada en el servidor.</p>
+    </div>
+    <button type="button" class="btn-actualizar" [disabled]="cargando()"
+            (click)="cargarPerfil()">Actualizar datos</button>
+  </div>
+
+  @if (cargando()) {
+    <p class="estado" role="status">Cargando información de su cuenta…</p>
+  } @else if (error()) {
+    <div class="error" role="alert">
+      <strong>No se pudo cargar el perfil.</strong>
+      <p>{{ error() }}</p>
+      <button type="button" (click)="cargarPerfil()">Reintentar</button>
+    </div>
+  } @else if (perfil(); as datos) {
+    @if (permisosCambiaron()) {
+      <div class="alerta" role="alert">
+        Sus permisos cambiaron. Cierre sesión y vuelva a ingresar para actualizarlos.
+      </div>
+    }
+
+    <div class="panel perfil">
+      <span class="avatar" aria-hidden="true">{{ datos.nombreCompleto.charAt(0).toUpperCase() }}</span>
+      <div>
+        <h2>{{ datos.nombreCompleto }}</h2>
+        <p>Usuario: <strong>{{ datos.username }}</strong></p>
+        <div class="roles" aria-label="Roles asignados">
+          @for (rol of datos.roles; track rol) {
+            <span class="etiqueta">{{ rol }}</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <h2 class="titulo-permisos">Permisos del servidor</h2>
+    <div class="modulos">
+      @for (modulo of modulos; track modulo.nombre) {
+        <section class="panel modulo">
+          <h3>{{ modulo.nombre }}</h3>
+          <ul>
+            @for (item of modulo.items; track item.codigo) {
+              <li [class.permitido]="datos.permisos.includes(item.codigo)">
+                <span class="marca" aria-hidden="true">
+                  {{ datos.permisos.includes(item.codigo) ? '✔' : '✘' }}
+                </span>
+                <span>
+                  {{ item.descripcion }}
+                  <small>{{ item.codigo }}</small>
+                </span>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    </div>
+  }
+</section>
