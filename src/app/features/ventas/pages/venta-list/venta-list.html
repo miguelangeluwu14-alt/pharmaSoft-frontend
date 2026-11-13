@@ -132,12 +132,12 @@
 
   } @else if (resultado(); as r) {
 
-    <table class="tabla">
+    <table class="tabla" data-testid="tabla-ventas">
 
       <thead>
         <tr>
           <th>N.º</th>
-          <th>Fecha</th>
+          <th><button type="button" class="btn no-imprimir" (click)="ordenarPor('fecha')">Fecha / orden</button><span class="solo-impresion">Fecha</span></th>
           <th>Cliente</th>
           <th>Ítems</th>
           <th class="monto">Total</th>
@@ -221,40 +221,15 @@
 
     </table>
 
-    <footer class="paginador">
-
-      <span class="solo-impresion">
-        Total registrado en la página
-        (sin anuladas):
-        {{ totalPagina() | currency: 'PEN' : 'S/ ' }}
-        ·
-      </span>
-
-      <span>
-        Página {{ r.pagina + 1 }}
-        de {{ r.totalPaginas || 1 }}
-        · {{ r.totalElementos }} ventas
-      </span>
-
-      <button
-        type="button"
-        class="btn no-imprimir"
-        [disabled]="r.pagina === 0"
-        (click)="irA(r.pagina - 1)"
-      >
-        Anterior
-      </button>
-
-      <button
-        type="button"
-        class="btn no-imprimir"
-        [disabled]="r.ultima"
-        (click)="irA(r.pagina + 1)"
-      >
-        Siguiente
-      </button>
-
-    </footer>
+    <p class="solo-impresion">Total de la página sin anuladas: {{ totalPagina() | currency: 'PEN' : 'S/ ' }}</p>
+    <app-paginador class="no-imprimir"
+      [pagina]="r.pagina"
+      [totalPaginas]="r.totalPaginas"
+      [totalElementos]="r.totalElementos"
+      [tamanio]="r.tamanio"
+      [tamanios]="[10, 20, 50, 100]"
+      (cambioPagina)="irA($event)"
+      (cambioTamanio)="cambiarTamanio($event)" />
 
   }
 

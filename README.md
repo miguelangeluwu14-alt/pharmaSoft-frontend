@@ -1,59 +1,74 @@
-# PharmaFrontend
+﻿# PharmaSoft - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.1.
+## 1. Descripcion
+Aplicacion web para gestionar categorias, productos y ventas.
+Desarrollada con Angular 22 y desplegada mediante Nginx.
 
-## Development server
+## 2. Arquitectura
+Navegador -> Nginx/Angular -> Spring Boot -> Oracle
+                                    |
+                                    +-> Redis
 
-To start a local development server, run:
+## 3. Puertos locales
+- Frontend y Nginx: http://localhost:8082
+- API Spring Boot: http://localhost:8081
+- Redis: 6379
 
-```bash
-ng serve
-```
+Nginx distribuye los archivos de Angular y redirige
+las solicitudes /api/ hacia el backend.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 4. Configuracion
+El frontend consume la API mediante rutas /api/v1/.
 
-## Code scaffolding
+Las credenciales de Oracle, Redis y JWT deben
+permanecer en el backend y no incluirse en Angular.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 5. Compilacion
+Desde la carpeta del frontend:
 
-```bash
-ng generate component component-name
-```
+npm ci
+npm run build -- --configuration production
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+La compilacion genera los archivos de distribucion.
 
-```bash
-ng generate --help
-```
+## 6. Despliegue local
+Construir la imagen:
 
-## Building
+docker build -t pharma-frontend:local .
 
-To build the project run:
+Desde el repositorio del backend:
 
-```bash
-ng build
-```
+docker compose up -d --no-deps --force-recreate frontend
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Verificar: http://localhost:8082
 
-## Running unit tests
+## 7. Optimizacion y cache
+- Carga diferida de modulos mediante lazy loading.
+- Archivos JavaScript y CSS con nombres versionados.
+- Recursos estaticos con cache de larga duracion.
+- index.html con Cache-Control: no-cache.
+- Respuestas de la API sin almacenamiento en cache del navegador.
+- Mensajes de error con codigo de seguimiento requestId.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## 8. Recuperacion y rollback
+1. Identificar una version estable en Git.
+2. Restaurar el codigo o imagen Docker correspondiente.
+3. Reconstruir el frontend.
+4. Actualizar el contenedor Nginx.
+5. Verificar inicio de sesion, productos y ventas.
 
-```bash
-ng test
-```
+## 9. Lista de verificacion
+- Compilacion de produccion satisfactoria.
+- Rutas y carga diferida verificadas.
+- Cache del navegador comprobada.
+- Conexion con la API funcional.
+- Mensajes de error y requestId verificados.
+- Ausencia de credenciales en el frontend.
+- Procedimiento de rollback documentado.
 
-## Running end-to-end tests
+## 10. Recomendaciones para produccion
+1. Utilizar HTTPS.
+2. Implementar monitoreo de errores del navegador.
+3. Automatizar despliegues y conservar versiones estables.
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+El despliegue actual corresponde a un entorno local de pruebas.
