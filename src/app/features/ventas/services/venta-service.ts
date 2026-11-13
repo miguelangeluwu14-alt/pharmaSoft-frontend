@@ -20,6 +20,7 @@ interface VentaBackend {
   estado: 'REGISTRADA' | 'ANULADA';
   total: number;
   detalles: Venta['detalles'];
+  creadoPor?: string | null;
 }
 
 interface PaginaBackend {
@@ -73,14 +74,16 @@ export class VentaService {
   buscar(
     filtro: FiltroVentas,
     pagina: number,
-    tamanio: number
+    tamanio: number,
+    ordenarPor: string = 'fecha',
+    direccion: 'asc' | 'desc' = 'desc'
   ): Observable<PaginaResponse<Venta>> {
 
     let params = new HttpParams()
       .set('pagina', pagina)
       .set('tamanio', tamanio)
-      .set('ordenarPor', 'fecha')
-      .set('direccion', 'desc');
+      .set('ordenarPor', ordenarPor)
+      .set('direccion', direccion);
 
     if (filtro.clienteId != null) {
       params = params.set(
@@ -205,7 +208,8 @@ export class VentaService {
       total: v.total,
 
       detalles:
-        v.detalles ?? []
+        v.detalles ?? [],
+      creadoPor: v.creadoPor
     };
   }
 }

@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 
@@ -11,7 +11,7 @@ import {
   ProductoRequest
 } from '../models/producto.model';
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class ProductoService {
   private readonly http = inject(HttpClient);
   private readonly url = `${environment.apiUrl}/productos`;
@@ -20,13 +20,18 @@ export class ProductoService {
     pagina: number,
     tamanio: number,
     ordenarPor: OrdenProducto,
-    direccion: Direccion
+    direccion: Direccion,
+    categoriaId: number | null = null
   ): Observable<PaginaResponse<Producto>> {
-    const params = new HttpParams()
+    let params = new HttpParams()
       .set('pagina', pagina)
       .set('tamanio', tamanio)
       .set('ordenarPor', ordenarPor)
       .set('direccion', direccion);
+
+    if (categoriaId !== null) {
+      params = params.set('categoriaId', categoriaId);
+    }
 
     return this.http
       .get<PaginaResponse<Producto> | Producto[]>(this.url, { params })

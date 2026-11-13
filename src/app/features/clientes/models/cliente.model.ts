@@ -7,4 +7,6 @@ export interface Cliente {
   telefono: string | null;
   direccion: string | null;
   estado: boolean;
+  creadoPor?: string | null;
+  modificadoPor?: string | null;
 }
